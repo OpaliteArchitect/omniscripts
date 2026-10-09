@@ -25,11 +25,10 @@ public class GoogleSheetsService
             );
         }
 
-        var credential =
-            (
-                CredentialFactory.FromJson<ICredential>(jsonCredential) as GoogleCredential
-            )?.CreateScoped(Scopes)
-            ?? throw new InvalidOperationException("Invalid Google credential payload.");
+        var credential = CredentialFactory
+            .FromJson<ServiceAccountCredential>(jsonCredential)
+            .ToGoogleCredential()
+            .CreateScoped(Scopes);
 
         using var sheetsService = new SheetsService(
             new BaseClientService.Initializer
