@@ -1,8 +1,7 @@
-namespace OmniScript.Server.Models;
+namespace Omniscripts.Server.Models;
 
-public class ScriptItem
-{
-    public required string Category { get; init; }
-    public required string Problem { get; init; }
-    public required string Script { get; init; }
-}
+public record ScriptItem(
+    string Category,
+    string Problem,
+    string Script
+);

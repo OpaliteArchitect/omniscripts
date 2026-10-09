@@ -1,22 +1,13 @@
+using Omniscripts.Server.DTOs;
+using Omniscripts.Server.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register GoogleSheetsService
 builder.Services.AddScoped<GoogleSheetsService>();
 
-// CORS setup for React frontend dev server
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
-});
-
 var app = builder.Build();
 
-app.UseCors();
-
-// POST /login
 app.MapPost(
     "/login",
     () =>
@@ -26,13 +17,12 @@ app.MapPost(
     }
 );
 
-// GET /scripts
 app.MapGet(
     "/scripts",
     async (GoogleSheetsService sheetsService, IConfiguration config) =>
     {
         var spreadsheetId = config["GoogleSheets:SpreadsheetId"];
-        var range = config["GoogleSheets:SheetRange"] ?? "Sheet1!A2:C"; // Default skips header
+        var range = config["GoogleSheets:SheetRange"] ?? "Sheet1!A2:C";
 
         if (string.IsNullOrEmpty(spreadsheetId))
         {
@@ -41,8 +31,22 @@ app.MapGet(
 
         try
         {
-            var scripts = await sheetsService.GetScriptsAsync(spreadsheetId, range);
-            return Results.Ok(scripts);
+            var rawScripts = await sheetsService.GetScriptsAsync(spreadsheetId, range);
+
+            // Map domain items into the DTO grouped by Category
+            var groupedCategories = rawScripts
+                .GroupBy(item => item.Category)
+                .Select(group => new CategoryGroup(
+                    Category: group.Key,
+                    Items: group
+                        .Select(item => new ProblemScript(item.Problem, item.Script))
+                        .ToList()
+                ))
+                .ToList();
+
+            var dto = new ScriptsDto(groupedCategories);
+
+            return Results.Ok(dto);
         }
         catch (Exception ex)
         {

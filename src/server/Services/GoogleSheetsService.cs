@@ -1,4 +1,9 @@
-namespace OmniScript.Server.Services;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
+using Omniscripts.Server.Models;
+
+namespace Omniscripts.Server.Services;
 
 public class GoogleSheetsService
 {
@@ -20,7 +25,11 @@ public class GoogleSheetsService
             );
         }
 
-        var credential = GoogleCredential.FromJson(jsonCredential).CreateScoped(Scopes);
+        var credential =
+            (
+                CredentialFactory.FromJson<ICredential>(jsonCredential) as GoogleCredential
+            )?.CreateScoped(Scopes)
+            ?? throw new InvalidOperationException("Invalid Google credential payload.");
 
         using var sheetsService = new SheetsService(
             new BaseClientService.Initializer
@@ -48,14 +57,7 @@ public class GoogleSheetsService
             var problem = row.Count > 1 ? row[1]?.ToString() ?? string.Empty : string.Empty;
             var scriptText = row.Count > 2 ? row[2]?.ToString() ?? string.Empty : string.Empty;
 
-            scripts.Add(
-                new ScriptItem
-                {
-                    Category = category,
-                    Problem = problem,
-                    Script = scriptText,
-                }
-            );
+            scripts.Add(new ScriptItem(category, problem, scriptText));
         }
 
         return scripts;
