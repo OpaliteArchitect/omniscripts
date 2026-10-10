@@ -3,7 +3,6 @@ using Omniscripts.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register GoogleSheetsService
 builder.Services.AddScoped<GoogleSheetsService>();
 
 var app = builder.Build();
