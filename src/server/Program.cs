@@ -37,9 +37,7 @@ app.MapGet(
                 .GroupBy(item => item.Category)
                 .Select(group => new CategoryGroup(
                     Category: group.Key,
-                    Items: group
-                        .Select(item => new ProblemScript(item.Problem, item.Script))
-                        .ToList()
+                    Items: group.Select(item => new IssueScript(item.Issue, item.Script)).ToList()
                 ))
                 .ToList();
 
