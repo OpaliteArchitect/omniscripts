@@ -11,4 +11,13 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api/scripts": {
+        target: "http://localhost:5090",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

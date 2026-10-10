@@ -8,7 +8,7 @@ builder.Services.AddScoped<GoogleSheetsService>();
 var app = builder.Build();
 
 app.MapPost(
-    "/login",
+    "/api/login",
     () =>
     {
         // TODO: Implement authentication logic in the future
@@ -17,7 +17,7 @@ app.MapPost(
 );
 
 app.MapGet(
-    "/scripts",
+    "/api/scripts",
     async (GoogleSheetsService sheetsService, IConfiguration config) =>
     {
         var spreadsheetId = config["GoogleSheets:SpreadsheetId"];
