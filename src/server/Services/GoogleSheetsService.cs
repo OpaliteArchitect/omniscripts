@@ -51,12 +51,12 @@ public class GoogleSheetsService
 
         foreach (var row in values)
         {
-            // Expecting row layout: Category (col 0), Problem (col 1), Script (col 2)
+            // Expecting row layout: Category (col 0), Issue (col 1), Script (col 2)
             var category = row.Count > 0 ? row[0]?.ToString() ?? string.Empty : string.Empty;
-            var problem = row.Count > 1 ? row[1]?.ToString() ?? string.Empty : string.Empty;
+            var issue = row.Count > 1 ? row[1]?.ToString() ?? string.Empty : string.Empty;
             var scriptText = row.Count > 2 ? row[2]?.ToString() ?? string.Empty : string.Empty;
 
-            scripts.Add(new ScriptItem(category, problem, scriptText));
+            scripts.Add(new ScriptItem(category, issue, scriptText));
         }
 
         return scripts;

@@ -1,7 +1,7 @@
 namespace Omniscripts.Server.DTOs;
 
-public record ProblemScript(string Problem, string Script);
+public record IssueScript(string Issue, string Script);
 
-public record CategoryGroup(string Category, List<ProblemScript> Items);
+public record CategoryGroup(string Category, List<IssueScript> Items);
 
 public record ScriptsDto(List<CategoryGroup> Categories);

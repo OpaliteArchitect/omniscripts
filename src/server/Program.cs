@@ -3,13 +3,12 @@ using Omniscripts.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register GoogleSheetsService
 builder.Services.AddScoped<GoogleSheetsService>();
 
 var app = builder.Build();
 
 app.MapPost(
-    "/login",
+    "/api/login",
     () =>
     {
         // TODO: Implement authentication logic in the future
@@ -18,7 +17,7 @@ app.MapPost(
 );
 
 app.MapGet(
-    "/scripts",
+    "/api/scripts",
     async (GoogleSheetsService sheetsService, IConfiguration config) =>
     {
         var spreadsheetId = config["GoogleSheets:SpreadsheetId"];
@@ -38,9 +37,7 @@ app.MapGet(
                 .GroupBy(item => item.Category)
                 .Select(group => new CategoryGroup(
                     Category: group.Key,
-                    Items: group
-                        .Select(item => new ProblemScript(item.Problem, item.Script))
-                        .ToList()
+                    Items: group.Select(item => new IssueScript(item.Issue, item.Script)).ToList()
                 ))
                 .ToList();
 
