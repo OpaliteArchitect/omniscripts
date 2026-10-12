@@ -61,4 +61,39 @@ public class GoogleSheetsService
 
         return scripts;
     }
+
+    public async Task<string?> GetPasswordAsync(string spreadsheetId, string range = "Sheets2!B2")
+    {
+        var jsonCredential = _configuration["GoogleSheets:ServiceAccountJson"];
+        if (string.IsNullOrWhiteSpace(jsonCredential))
+        {
+            throw new InvalidOperationException(
+                "GoogleSheets:ServiceAccountJson configuration is missing."
+            );
+        }
+
+        var credential = CredentialFactory
+            .FromJson<ServiceAccountCredential>(jsonCredential)
+            .ToGoogleCredential()
+            .CreateScoped(Scopes);
+
+        using var sheetsService = new SheetsService(
+            new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "Omniscripts.Server",
+            }
+        );
+
+        var request = sheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
+        var response = await request.ExecuteAsync();
+        var values = response.Values;
+
+        if (values != null && values.Count > 0 && values[0].Count > 0)
+        {
+            return values[0][0]?.ToString();
+        }
+
+        return null;
+    }
 }
