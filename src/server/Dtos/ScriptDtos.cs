@@ -1,4 +1,4 @@
-namespace Omniscripts.Server.DTOs;
+namespace Omniscripts.Server.Dtos;
 
 public record IssueScript(string Issue, string Script);
 
