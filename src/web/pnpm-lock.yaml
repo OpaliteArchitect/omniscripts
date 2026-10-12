@@ -11,6 +11,9 @@ importers:
       '@base-ui/react':
         specifier: ^1.8.0
         version: 1.8.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@flaregun-net/proxyflare-for-pages':
+        specifier: ^0.1.0
+        version: 0.1.0(@cloudflare/workers-types@3.14.0)
       '@fontsource-variable/inter':
         specifier: ^5.3.0
         version: 5.3.0
@@ -247,6 +250,9 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
+  '@cloudflare/workers-types@3.14.0':
+    resolution: {integrity: sha512-F6lZuzu/vNl9AxOq1U3x2UCi68bcE1O59cKGQ5ntRh3lGQfd3vers6NUag02T7P+qFCHaAp78QN6fRmq12Y3iA==}
+
   '@dotenvx/dotenvx@1.75.1':
     resolution: {integrity: sha512-/BITOC9dmS/edY2zQwZNicQ059O6RKabtQfyEafV0nGtfYRNHYy1DIPiYVcov40+tob9hfmBnbR963dS+EQ1DQ==}
     hasBin: true
@@ -292,6 +298,11 @@ packages:
   '@eslint/plugin-kit@0.7.3':
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@flaregun-net/proxyflare-for-pages@0.1.0':
+    resolution: {integrity: sha512-uVZ4s1GxpYJ+InnXLTczHqjrIUSWqxiHV2I6NQj4AVyV5ZozbMhuFXETpnk0IT5a4aRXew7rGMuYr4hzsu0T+g==}
+    peerDependencies:
+      '@cloudflare/workers-types': 3.14.0
 
   '@floating-ui/core@1.8.0':
     resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
@@ -2417,6 +2428,8 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
+  '@cloudflare/workers-types@3.14.0': {}
+
   '@dotenvx/dotenvx@1.75.1':
     dependencies:
       '@dotenvx/primitives': 0.8.0
@@ -2471,6 +2484,10 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
+
+  '@flaregun-net/proxyflare-for-pages@0.1.0(@cloudflare/workers-types@3.14.0)':
+    dependencies:
+      '@cloudflare/workers-types': 3.14.0
 
   '@floating-ui/core@1.8.0':
     dependencies:
