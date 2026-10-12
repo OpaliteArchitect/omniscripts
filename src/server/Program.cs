@@ -46,7 +46,7 @@ app.MapPost(
             return Results.Problem("Spreadsheet ID configuration is missing.");
         }
 
-        var expectedPassword = await sheetsService.GetPasswordAsync(spreadsheetId, "Sheets2!B2");
+        var expectedPassword = await sheetsService.GetPasswordAsync(spreadsheetId, "Sheet2!B2");
         if (string.IsNullOrWhiteSpace(expectedPassword) || request.Password != expectedPassword)
         {
             return Results.Unauthorized();

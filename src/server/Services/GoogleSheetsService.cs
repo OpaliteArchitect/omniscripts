@@ -62,7 +62,7 @@ public class GoogleSheetsService
         return scripts;
     }
 
-    public async Task<string?> GetPasswordAsync(string spreadsheetId, string range = "Sheets2!B2")
+    public async Task<string?> GetPasswordAsync(string spreadsheetId, string range = "Sheet2!B2")
     {
         var jsonCredential = _configuration["GoogleSheets:ServiceAccountJson"];
         if (string.IsNullOrWhiteSpace(jsonCredential))
