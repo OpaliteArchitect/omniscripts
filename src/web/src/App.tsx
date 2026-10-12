@@ -1,25 +1,37 @@
 import { useState } from "react";
-import { Button } from "./components/ui/button";
+import { Login } from "./components/Login";
+import { Button } from "@/components/ui/button";
 
-function App() {
-  const [scripts, setScripts] = useState("");
+export function App() {
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("jwt_token"),
+  );
 
-  async function getScripts() {
-    const url = "/api/scripts";
+  const handleLoginSuccess = (newToken: string) => {
+    localStorage.setItem("jwt_token", newToken);
+    setToken(newToken);
+  };
 
-    const response = await fetch(url);
-    if (response.ok) {
-      const text = await response.text();
-      setScripts(text);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("jwt_token");
+    setToken(null);
+  };
+
+  if (!token) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button variant="ghost" onClick={getScripts}>
-        Click Me
-      </Button>
-      <pre>{scripts}</pre>
+    <div className="p-8 space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Scripts Dashboard</h1>
+        <Button variant="outline" onClick={handleLogout}>
+          Sign Out
+        </Button>
+      </div>
+      <p className="text-muted-foreground">
+        Successfully authenticated with backend!
+      </p>
     </div>
   );
 }
