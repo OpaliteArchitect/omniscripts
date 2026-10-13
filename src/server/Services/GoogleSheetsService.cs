@@ -1,3 +1,4 @@
+using System.Text;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
@@ -17,26 +18,7 @@ public class GoogleSheetsService
 
     public async Task<List<ScriptItem>> GetScriptsAsync(string spreadsheetId, string range)
     {
-        var jsonCredential = _configuration["GoogleSheets:ServiceAccountJson"];
-        if (string.IsNullOrWhiteSpace(jsonCredential))
-        {
-            throw new InvalidOperationException(
-                "GoogleSheets:ServiceAccountJson configuration is missing."
-            );
-        }
-
-        var credential = CredentialFactory
-            .FromJson<ServiceAccountCredential>(jsonCredential)
-            .ToGoogleCredential()
-            .CreateScoped(Scopes);
-
-        using var sheetsService = new SheetsService(
-            new BaseClientService.Initializer
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "Omniscripts.Server",
-            }
-        );
+        using var sheetsService = CreateSheetsService();
 
         var request = sheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
         var response = await request.ExecuteAsync();
@@ -51,7 +33,6 @@ public class GoogleSheetsService
 
         foreach (var row in values)
         {
-            // Expecting row layout: Category (col 0), Issue (col 1), Script (col 2)
             var category = row.Count > 0 ? row[0]?.ToString() ?? string.Empty : string.Empty;
             var issue = row.Count > 1 ? row[1]?.ToString() ?? string.Empty : string.Empty;
             var scriptText = row.Count > 2 ? row[2]?.ToString() ?? string.Empty : string.Empty;
@@ -64,26 +45,7 @@ public class GoogleSheetsService
 
     public async Task<string?> GetPasswordAsync(string spreadsheetId, string range = "Sheet2!B2")
     {
-        var jsonCredential = _configuration["GoogleSheets:ServiceAccountJson"];
-        if (string.IsNullOrWhiteSpace(jsonCredential))
-        {
-            throw new InvalidOperationException(
-                "GoogleSheets:ServiceAccountJson configuration is missing."
-            );
-        }
-
-        var credential = CredentialFactory
-            .FromJson<ServiceAccountCredential>(jsonCredential)
-            .ToGoogleCredential()
-            .CreateScoped(Scopes);
-
-        using var sheetsService = new SheetsService(
-            new BaseClientService.Initializer
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "Omniscripts.Server",
-            }
-        );
+        using var sheetsService = CreateSheetsService();
 
         var request = sheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
         var response = await request.ExecuteAsync();
@@ -95,5 +57,38 @@ public class GoogleSheetsService
         }
 
         return null;
+    }
+
+    private SheetsService CreateSheetsService()
+    {
+        var base64Config = _configuration["GoogleSheets:ServiceAccountJson"];
+        if (string.IsNullOrWhiteSpace(base64Config))
+        {
+            throw new InvalidOperationException(
+                "GoogleSheets:ServiceAccountJson configuration is missing."
+            );
+        }
+
+        var bytes = Convert.FromBase64String(base64Config.Trim());
+        var jsonCredential = Encoding.UTF8.GetString(bytes);
+
+        var credential = CredentialFactory
+            .FromJson<ServiceAccountCredential>(jsonCredential)
+            .ToGoogleCredential()
+            .CreateScoped(Scopes);
+
+        var appName =
+            _configuration["GoogleSheets:ApplicationName"]
+            ?? throw new InvalidOperationException(
+                "GoogleSheets:ApplicationName configuration is missing."
+            );
+
+        return new SheetsService(
+            new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = appName,
+            }
+        );
     }
 }
