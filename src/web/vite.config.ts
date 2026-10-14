@@ -13,7 +13,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api/scripts": {
+      "/api": {
         target: "http://localhost:5090",
         changeOrigin: true,
         secure: false,
