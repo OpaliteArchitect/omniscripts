@@ -1,33 +1,42 @@
 # Omniscripts
 
-Support script dashboard. Pick a category, pick an issue, read the script.
+Support script dashboard. Pick a category, pick an issue, read the same script. Manage via Google Sheets.
 
 <p align="center">
   <img src="./assets/dashboard.png" width="600" alt="Screenshot of the dashboard">
+  <em>Main dashboard</em><br>
 </p>
 
 <p align="center">
-  <em>Authentication Flow</em><br>
   <img src="./assets/login.png" width="350" alt="Screenshot of the login screen">
+  <em>Authentication gateway</em><br>
 </p>
 
 <p align="center">
-  <em>Google Sheets</em><br>
   <img src="./assets/sheets.png" width="500" alt="Screenshot of the Sheets">
+  <em>Google Sheets</em><br>
 </p>
 
 ## Tech stack
 
 - React, Vite, TypeScript, Tailwind, shadcn/ui
-- ASP.NET Core minimal API
-- Google Sheets as the data store
-- Cloudflare functions for the proxy function
+- ASP.NET Core minimal API (.NET 10)
+- Google Sheets as headless CMS
+- Cloudflare Pages functions for the proxy function
 
-##
+## Who is it for?
+
+I made this as a quick prototype for an internal tooling for my mom's work.
+
+Anyone who needs to access a unified response script can benefit from this minimal setup and straightforward workflow.
+
+## Details
 
 Three panes: categories, issues, script content. Scripts live in a Google Sheet with three columns — `Category`, `Issue`, `Script`. Editing the sheet updates the app; there's no separate admin UI. The API reads the sheet via the Google Sheets API and serves it to the frontend.
 
-Auth is a single shared password. The server exchanges it for a JWT (12h expiry), stored in localStorage. The SPA and API are on different hosts, so a Cloudflare Pages Function at `functions/api/_middleware.ts` proxies `/api/*` to the backend to avoid CORS issues.
+Auth is a single shared password. The server exchanges it for a JWT (12h expiry), stored in localStorage. Update the password in the Google Sheets.
+
+The SPA and API are on different hosts, so a Cloudflare Pages Function at `functions/api/_middleware.ts` proxies `/api/*` to the backend to avoid CORS issues.
 
 You can serve the web app directly from the same domain by using the Static Files middleware and building the React app and bundling it. But I prefer doing it this way to utilize CDNs.
 
@@ -52,7 +61,7 @@ omniscripts/
 
 ## Configuration & Environment Variables
 
-The backend requires the following configuration values (use appsettings.json, environment variables, user-secrets, and common sense):
+The backend requires the following. Use `appsettings.json`, environment variables, user-secrets, and common sense:
 
 | Key                               | Description                                                                   |
 | :-------------------------------- | :---------------------------------------------------------------------------- |
@@ -62,7 +71,7 @@ The backend requires the following configuration values (use appsettings.json, e
 | `GoogleSheets:ApplicationName`    | Name passed to the Google API client, used for logging.                       |
 | `GoogleSheets:SheetRange`         | Optional range for script data (defaults to `Sheet1!A2:C`).                   |
 
-For the Cloudflare Pages frontend, configure the following environment variable:
+For the frontend, configure the following environment variable:
 
 | Key               | Description                                     |
 | :---------------- | :---------------------------------------------- |
@@ -88,7 +97,7 @@ Put the password in tab `Sheet2`, in cell `B2`.
 cd src/server
 dotnet run
 
-# Web
+# Frontend
 cd src/web
 pnpm install
 pnpm dev
