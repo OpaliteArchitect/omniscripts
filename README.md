@@ -4,17 +4,17 @@ Support script dashboard. Pick a category, pick an issue, read the same script. 
 
 <p align="center">
   <img src="./assets/dashboard.png" width="600" alt="Screenshot of the dashboard">
-  <em>Main dashboard</em><br>
+  <br><em>Main dashboard</em>
 </p>
 
 <p align="center">
   <img src="./assets/login.png" width="350" alt="Screenshot of the login screen">
-  <em>Authentication gateway</em><br>
+  <br><em>Authentication gateway</em>
 </p>
 
 <p align="center">
   <img src="./assets/sheets.png" width="500" alt="Screenshot of the Sheets">
-  <em>Google Sheets</em><br>
+  <br><em>Google Sheets</em>
 </p>
 
 ## Tech stack
@@ -32,11 +32,11 @@ Anyone who needs to access a unified response script can benefit from this minim
 
 ## Details
 
-Three panes: categories, issues, script content. Scripts live in a Google Sheet with three columns — `Category`, `Issue`, `Script`. Editing the sheet updates the app; there's no separate admin UI. The API reads the sheet via the Google Sheets API and serves it to the frontend.
+Three panes: categories, issues, script content. Scripts live in a Google Sheet with three columns: `Category`, `Issue`, `Script`. Editing the sheet updates the app. The API reads the sheet via the Google Sheets API and serves it to the frontend.
 
 Auth is a single shared password. The server exchanges it for a JWT (12h expiry), stored in localStorage. Update the password in the Google Sheets.
 
-The SPA and API are on different hosts, so a Cloudflare Pages Function at `functions/api/_middleware.ts` proxies `/api/*` to the backend to avoid CORS issues.
+The SPA and API are on different hosts, so a Cloudflare Pages function at `functions/api/_middleware.ts` proxies `/api/*` to the backend to avoid CORS issues.
 
 You can serve the web app directly from the same domain by using the Static Files middleware and building the React app and bundling it. But I prefer doing it this way to utilize CDNs.
 
@@ -88,7 +88,7 @@ Set up your Google Sheet with a structure shaped like this:
 | A   | Category                | Issue               | Script                  |
 | B   | Billing & Subscriptions | Unrecognized Charge | Hi [Customer Name], ... |
 
-Put the password in tab `Sheet2`, in cell `B2`.
+And put the password in tab `Sheet2`, in cell `B2`.
 
 ## Try in dev
 
