@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Login } from "./components/Login";
-import { Button } from "@/components/ui/button";
+import { Login } from "@/components/Login";
+import { Dashboard } from "@/components/Dashboard";
 
 export function App() {
   const [token, setToken] = useState<string | null>(
@@ -21,19 +21,7 @@ export function App() {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return (
-    <div className="p-8 space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Scripts Dashboard</h1>
-        <Button variant="outline" onClick={handleLogout}>
-          Sign Out
-        </Button>
-      </div>
-      <p className="text-muted-foreground">
-        Successfully authenticated with backend!
-      </p>
-    </div>
-  );
+  return <Dashboard token={token} onLogout={handleLogout} />;
 }
 
 export default App;
